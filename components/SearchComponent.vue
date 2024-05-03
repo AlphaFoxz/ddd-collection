@@ -76,8 +76,9 @@ function put(container: DisplayResult[], item: SearchResult) {
     item.titleHtml = item.title.replaceAll(reg, function (m) {
       return `<mark>${m}</mark>`
     })
+    item.titlesHtml = item.titles
     for (let i = 0; item.titles && i < item.titles.length; i++) {
-      item.titles[i] = item.titles[i].replaceAll(reg, function (m) {
+      item.titlesHtml![i] = item.titles[i].replaceAll(reg, function (m) {
         return `<mark>${m}</mark>`
       })
     }
@@ -86,11 +87,9 @@ function put(container: DisplayResult[], item: SearchResult) {
   {
     const t: MatchType[] = []
     for (const k of Object.keys(item.match)) {
-      if (item.match[k].length !== 1) {
-        console.error('match error', k, item.match[k])
-        return
+      for (const m of item.match[k]) {
+        t.push(m)
       }
-      t.push(item.match[k][0])
     }
     if (t.length === 0) {
       return
@@ -114,7 +113,7 @@ function putTitle(container: DisplayResult[], item: SearchResult) {
   const child: DisplayResult = {
     id: item.id,
     title: item.titles ? item.titles.join('->') : item.title,
-    titleHtml: item.titles ? item.titlesHtml!.join('->') : item.titleHtml!,
+    titleHtml: item.titlesHtml ? item.titlesHtml!.join('->') : item.titleHtml!,
     matchType: 'title',
     content: item.title,
     contentHtml: item.titleHtml!,
